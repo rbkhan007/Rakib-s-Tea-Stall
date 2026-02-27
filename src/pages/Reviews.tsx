@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Star, Quote, User, RefreshCw, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Star, Quote, User, RefreshCw } from 'lucide-react';
 import ReviewModal from '../components/ReviewModal';
 
 interface Review {
@@ -28,7 +27,6 @@ const Reviews = () => {
         const data = await response.json();
         setReviews(data);
         
-        // Calculate stats
         if (data.length > 0) {
           const totalRating = data.reduce((sum: number, r: Review) => sum + r.rating, 0);
           const avg = (totalRating / data.length).toFixed(1);
@@ -50,302 +48,153 @@ const Reviews = () => {
     fetchReviews();
   }, []);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-    return `${Math.floor(diffDays / 365)} years ago`;
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
   };
 
   return (
-    <div 
-      className="pt-24 pb-16 min-h-screen"
-      style={{ 
-        backgroundColor: 'var(--bg-primary)',
-        fontFamily: 'var(--font-family)'
-      }}
-    >
-      {/* Back Button */}
-      <div className="container mx-auto px-4 mb-4">
-        <Link 
-          to="/" 
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full transition-all"
-          style={{ 
-            color: 'var(--text-secondary)',
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border)'
-          }}
+    <div className="pt-28 pb-20 min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <div className="container-luxury">
+        {/* Header */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="text-center mb-16"
         >
-          <ArrowLeft size={18} />
-          Back to Home
-        </Link>
-      </div>
-
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+          <span 
+            className="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-4"
+            style={{ backgroundColor: 'var(--accent-light)', color: 'var(--accent)' }}
+          >
+            Testimonials
+          </span>
           <h1 
-            className="text-4xl md:text-5xl font-bold mb-4"
+            className="text-5xl lg:text-6xl mb-4"
             style={{ 
-              color: 'var(--text-primary)'
+              color: 'var(--text-primary)', 
+              fontFamily: 'var(--font-display)'
             }}
           >
-            Customer Reviews
+            What Our Guests Say
           </h1>
-          <p 
-            style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}
-            className="text-lg max-w-xl mx-auto"
-          >
-            See what our community has to say about their experience at Rakib's Tea Stall.
+          <p style={{ color: 'var(--text-secondary)' }} className="max-w-xl mx-auto">
+            Discover why our customers keep coming back for more
           </p>
-        </div>
+        </motion.div>
 
-        {/* Stats Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-          <div 
-            className="p-8 rounded-3xl text-center transition-all hover:scale-[1.02]"
-            style={{ 
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border)'
-            }}
-          >
-            <h3 
-              className="text-5xl font-bold mb-2"
-              style={{ color: 'var(--accent)' }}
-            >
-              {stats.average}
-            </h3>
-            <div className="flex justify-center gap-1 mb-4">
-              {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  size={20} 
-                  fill={i < Math.round(stats.average) ? 'var(--accent)' : 'none'} 
-                  className={i < Math.round(stats.average) ? "" : ""} 
-                  style={{ color: i < Math.round(stats.average) ? 'var(--accent)' : 'var(--text-secondary)' }} 
-                />
-              ))}
+        {/* Stats */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="grid grid-cols-3 gap-6 mb-16"
+        >
+          {[
+            { value: stats.average, label: 'Average Rating', suffix: '/5' },
+            { value: stats.total, label: 'Total Reviews' },
+            { value: stats.happy, label: 'Satisfaction', suffix: '%' }
+          ].map((stat, idx) => (
+            <div key={idx} className="luxury-card rounded-2xl p-6 text-center">
+              <div 
+                className="text-4xl font-medium mb-1"
+                style={{ color: 'var(--accent)', fontFamily: 'var(--font-display)' }}
+              >
+                {stat.value}{stat.suffix || ''}
+              </div>
+              <div style={{ color: 'var(--text-secondary)' }} className="text-sm">{stat.label}</div>
             </div>
-            <p style={{ color: 'var(--text-secondary)' }} className="font-medium">Average Rating</p>
-          </div>
-          <div 
-            className="p-8 rounded-3xl text-center transition-all hover:scale-[1.02]"
-            style={{ 
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border)'
-            }}
-          >
-            <h3 
-              className="text-5xl font-bold mb-2"
-              style={{ color: 'var(--accent)' }}
-            >
-              {stats.total}+
-            </h3>
-            <p style={{ color: 'var(--text-secondary)' }} className="font-medium mt-4">Verified Reviews</p>
-          </div>
-          <div 
-            className="p-8 rounded-3xl text-center transition-all hover:scale-[1.02]"
-            style={{ 
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border)'
-            }}
-          >
-            <h3 
-              className="text-5xl font-bold mb-2"
-              style={{ color: 'var(--accent)' }}
-            >
-              {stats.happy}%
-            </h3>
-            <p style={{ color: 'var(--text-secondary)' }} className="font-medium mt-4">Happy Customers</p>
-          </div>
-        </div>
+          ))}
+        </motion.div>
 
-        {/* Refresh Button */}
-        <div className="flex justify-center mb-8">
+        {/* Write Review Button */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="text-center mb-12"
+        >
           <button
-            onClick={fetchReviews}
-            className="flex items-center gap-2 px-6 py-2 rounded-full transition-colors"
-            style={{ 
-              backgroundColor: 'var(--bg-card)',
-              color: 'var(--text-secondary)',
-              border: '1px solid var(--border)'
-            }}
+            onClick={() => setIsModalOpen(true)}
+            className="btn-luxury btn-primary-luxury"
           >
-            <RefreshCw size={18} />
-            Refresh Reviews
+            Write a Review
           </button>
-        </div>
+        </motion.div>
 
         {/* Reviews Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, i) => (
-              <div 
-                key={i} 
-                className="p-8 rounded-[2.5rem] shadow-xl animate-pulse"
-                style={{ 
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border)'
-                }}
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <div 
-                    className="w-14 h-14 rounded-full"
-                    style={{ backgroundColor: 'var(--border)' }}
-                  />
-                  <div>
-                    <div 
-                      className="h-5 w-32 rounded mb-2"
-                      style={{ backgroundColor: 'var(--border)' }}
-                    />
-                    <div 
-                      className="h-4 w-24 rounded"
-                      style={{ backgroundColor: 'var(--border)' }}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2 mb-6">
-                  <div 
-                    className="h-4 rounded"
-                    style={{ backgroundColor: 'var(--border)' }}
-                  />
-                  <div 
-                    className="h-4 rounded"
-                    style={{ backgroundColor: 'var(--border)' }}
-                  />
-                  <div 
-                    className="h-4 w-2/3 rounded"
-                    style={{ backgroundColor: 'var(--border)' }}
-                  />
-                </div>
-              </div>
-            ))}
+          <div className="text-center py-20">
+            <RefreshCw className="w-8 h-8 mx-auto animate-spin" style={{ color: 'var(--accent)' }} />
+            <p style={{ color: 'var(--text-secondary)' }} className="mt-4">Loading reviews...</p>
           </div>
-        ) : reviews.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {reviews.map((review, i) => (
+        ) : (
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {reviews.map((review) => (
               <motion.div
                 key={review.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="p-8 rounded-[2.5rem] shadow-xl relative group hover:scale-[1.02] transition-all"
-                style={{ 
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border)'
-                }}
+                variants={fadeInUp}
+                className="luxury-card rounded-2xl p-6 relative"
               >
                 <Quote 
-                  className="absolute top-6 right-8 transition-colors" 
-                  size={60} 
-                  style={{ 
-                    color: 'var(--accent)',
-                    opacity: 0.15
-                  }}
+                  className="absolute top-4 right-4" 
+                  size={24} 
+                  style={{ color: 'var(--accent)', opacity: 0.3 }} 
                 />
                 
-                <div className="flex items-center gap-4 mb-6">
-                  <img 
-                    src={review.avatar || `https://picsum.photos/seed/${review.id}/100/100`} 
-                    alt={review.name} 
-                    className="w-14 h-14 rounded-full object-cover"
-                    style={{ border: '2px solid var(--accent)', borderOpacity: 0.2 }}
-                  />
-                  <div>
-                    <h4 
-                      className="font-bold text-lg"
-                      style={{ color: 'var(--text-primary)' }}
-                    >
-                      {review.name}
-                    </h4>
-                    <p style={{ color: 'var(--text-secondary)' }} className="text-sm">{review.role}</p>
-                  </div>
-                </div>
-
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
                       size={16} 
-                      fill={i < review.rating ? 'var(--accent)' : 'none'} 
-                      style={{ color: i < review.rating ? 'var(--accent)' : 'var(--text-secondary)' }} 
+                      fill={i < review.rating ? 'var(--accent)' : 'transparent'}
+                      stroke={i < review.rating ? 'var(--accent)' : 'var(--text-muted)'}
                     />
                   ))}
                 </div>
 
-                <p 
-                  className="leading-relaxed mb-6"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
+                <p style={{ color: 'var(--text-secondary)' }} className="mb-6 leading-relaxed">
                   "{review.text}"
                 </p>
 
-                <div 
-                  className="text-xs font-medium uppercase tracking-widest"
-                  style={{ color: 'var(--text-secondary)', opacity: 0.7 }}
-                >
-                  {formatDate(review.created_at)}
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium"
+                    style={{ 
+                      background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)',
+                      color: 'white'
+                    }}
+                  >
+                    {review.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
+                      {review.name}
+                    </p>
+                    <p style={{ color: 'var(--text-muted)' }} className="text-xs">{review.role}</p>
+                  </div>
                 </div>
               </motion.div>
             ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <User size={64} className="mx-auto mb-4" style={{ color: 'var(--text-secondary)' }} />
-            <h3 
-              className="text-xl font-bold mb-2"
-              style={{ color: 'var(--text-primary)' }}
-            >
-              No Reviews Yet
-            </h3>
-            <p style={{ color: 'var(--text-secondary)' }}>
-              Be the first to share your experience!
-            </p>
-          </div>
+          </motion.div>
         )}
 
-        {/* Write a Review CTA */}
-        <div className="mt-24 text-center">
-          <h2 
-            className="text-3xl font-bold mb-6"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            Loved our tea?
-          </h2>
-          <p style={{ color: 'var(--text-secondary)' }} className="mb-8">Share your experience and help others discover the best chai in town.</p>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="px-10 py-4 rounded-full text-white font-bold hover:scale-105 transition-transform shadow-xl"
-            style={{ 
-              backgroundColor: 'var(--accent)',
-              boxShadow: '0 0 30px var(--accent-light)'
-            }}
-          >
-            Write a Review
-          </button>
-        </div>
+        {reviews.length === 0 && !loading && (
+          <div className="text-center py-16">
+            <p style={{ color: 'var(--text-secondary)' }}>No reviews yet. Be the first to share your experience!</p>
+          </div>
+        )}
       </div>
 
-      {/* Google Fonts Import */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
-      `}</style>
-
-      {/* Review Modal */}
-      <ReviewModal 
-        isOpen={isModalOpen} 
-        onClose={() => {
-          setIsModalOpen(false);
-          fetchReviews(); // Refresh after submission
-        }} 
-      />
+      <ReviewModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

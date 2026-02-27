@@ -152,49 +152,61 @@ const Checkout: React.FC = () => {
 
   if (cart.length === 0 && step !== 3) {
     return (
-      <div className="pt-32 pb-24 text-center min-h-screen" style={{ backgroundColor: 'transparent' }}>
-        <div className="container mx-auto px-4">
-          <ShoppingBag size={64} className="mx-auto text-stone-300 mb-6" />
-          <h1 className="text-3xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Your cart is empty</h1>
-          <Link to="/menu" className="text-orange-500 font-bold hover:underline">Go to Menu</Link>
+      <div className="pt-28 pb-20 text-center min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <div className="container-luxury">
+          <div className="luxury-card rounded-3xl p-12 max-w-md mx-auto">
+            <ShoppingBag size={64} className="mx-auto mb-6" style={{ color: 'var(--accent)' }} />
+            <h1 className="text-3xl font-medium mb-4" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>Your cart is empty</h1>
+            <Link to="/menu" className="btn-luxury btn-primary-luxury inline-flex">Go to Menu</Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="pt-32 pb-24 min-h-screen" style={{ backgroundColor: 'transparent' }}>
-      <div className="container mx-auto px-4 max-w-6xl">
+    <div className="pt-28 pb-20 min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <div className="container-luxury">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold" style={{ color: 'var(--text-primary)' }}>Checkout</h1>
+        <div className="mb-10">
+          <h1 className="text-4xl lg:text-5xl" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>Checkout</h1>
           <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>
             {isAuthenticated ? `Welcome back, ${customer?.name}` : 'Complete your order'}
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Column - Forms (60%) */}
+          {/* Left Column - Forms */}
           <div className="w-full lg:w-[60%] space-y-6">
             {/* Progress Steps */}
             <div className="flex items-center gap-4 mb-6">
               <button
                 onClick={() => step > 1 && setStep(1)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-colors ${
-                  step >= 1 ? 'bg-orange-500 text-white' : 'bg-stone-200 dark:bg-stone-800 text-stone-500'
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${
+                  step >= 1 ? 'text-white' : ''
                 }`}
+                style={{ 
+                  background: step >= 1 ? 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)' : 'var(--bg-card)',
+                  color: step >= 1 ? 'white' : 'var(--text-muted)',
+                  border: step >= 1 ? 'none' : '1px solid var(--border-light)'
+                }}
               >
-                <Truck size={18} />
+                <Truck size={16} />
                 Shipping
               </button>
-              <div className="flex-1 h-0.5 bg-stone-300 dark:bg-stone-700" />
+              <div className="flex-1 h-0.5" style={{ backgroundColor: 'var(--border-light)' }} />
               <button
                 onClick={() => step > 2 && setStep(2)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-colors ${
-                  step >= 2 ? 'bg-orange-500 text-white' : 'bg-stone-200 dark:bg-stone-800 text-stone-500'
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${
+                  step >= 2 ? 'text-white' : ''
                 }`}
+                style={{ 
+                  background: step >= 2 ? 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)' : 'var(--bg-card)',
+                  color: step >= 2 ? 'white' : 'var(--text-muted)',
+                  border: step >= 2 ? 'none' : '1px solid var(--border-light)'
+                }}
               >
-                <CreditCard size={18} />
+                <CreditCard size={16} />
                 Payment
               </button>
             </div>
@@ -214,8 +226,8 @@ const Checkout: React.FC = () => {
                 
                 <form onSubmit={handleShippingSubmit(onShippingSubmit)} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    <div className="form-field form-field-spacing">
+                      <label className="form-label">
                         Full Name *
                       </label>
                       <input
@@ -229,8 +241,8 @@ const Checkout: React.FC = () => {
                       )}
                     </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    <div className="form-field form-field-spacing">
+                      <label className="form-label">
                         Email *
                       </label>
                       <input
@@ -250,8 +262,8 @@ const Checkout: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    <div className="form-field form-field-spacing">
+                      <label className="form-label">
                         Phone *
                       </label>
                       <input
@@ -266,8 +278,8 @@ const Checkout: React.FC = () => {
                       )}
                     </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    <div className="form-field form-field-spacing">
+                      <label className="form-label">
                         City *
                       </label>
                       <input
@@ -282,8 +294,8 @@ const Checkout: React.FC = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  <div className="form-field form-field-spacing">
+                    <label className="form-label">
                       Full Address *
                     </label>
                     <textarea
@@ -298,8 +310,8 @@ const Checkout: React.FC = () => {
                     )}
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  <div className="form-field form-field-spacing">
+                    <label className="form-label">
                       Zip Code
                     </label>
                     <input

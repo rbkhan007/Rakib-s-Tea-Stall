@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const AdminLogin: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -42,23 +42,26 @@ const AdminLogin: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div 
-          className="glass-card p-8 rounded-3xl"
-          style={{ 
-            backgroundColor: 'var(--bg-card)',
-            boxShadow: 'var(--shadow-lg)'
-          }}
+        <motion.div 
+          initial={{ scale: 0.95 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="luxury-card p-8"
         >
           <div className="text-center mb-8">
-            <div 
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
               className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
               style={{ backgroundColor: 'var(--accent-light)' }}
             >
               <Lock size={32} style={{ color: 'var(--accent)' }} />
-            </div>
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+            </motion.div>
+            <h1 className="text-2xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>
               Admin Login
             </h1>
             <p style={{ color: 'var(--text-secondary)' }} className="mt-2">
@@ -77,12 +80,9 @@ const AdminLogin: React.FC = () => {
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ color: 'var(--text-secondary)' }}
-              >
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="form-field form-field-spacing">
+              <label className="form-label">
                 Username
               </label>
               <input
@@ -100,11 +100,8 @@ const AdminLogin: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ color: 'var(--text-secondary)' }}
-              >
+            <div className="form-field form-field-spacing">
+              <label className="form-label">
                 Password
               </label>
               <div className="relative">
@@ -124,21 +121,19 @@ const AdminLogin: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 transition-colors p-1"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl font-medium transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ 
-                backgroundColor: 'var(--accent)',
-                color: 'white'
-              }}
+              className="w-full py-3.5 px-4 rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed btn-luxury mt-2"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -148,19 +143,19 @@ const AdminLogin: React.FC = () => {
               ) : (
                 'Sign In'
               )}
-            </button>
+            </motion.button>
           </form>
 
           <div className="mt-6 text-center">
-            <a 
-              href="/" 
-              className="text-sm hover:underline"
+            <Link 
+              to="/" 
+              className="text-sm hover:underline inline-flex items-center gap-1 transition-colors"
               style={{ color: 'var(--text-secondary)' }}
             >
               ← Back to Home
-            </a>
+            </Link>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );

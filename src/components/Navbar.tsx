@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Moon, Sun, MessageCircle, User, LogOut, Shield, Settings } from 'lucide-react';
+import { ShoppingCart, Menu, X, Moon, Sun, MessageCircle, User, Play, BarChart3 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 import { useCustomer } from '../context/CustomerContext';
@@ -10,237 +10,268 @@ import { cn } from '../lib/utils';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { totalItems } = useCart();
   const { theme, toggleTheme } = useTheme();
   const { customer, isAuthenticated, logout } = useCustomer();
   const { admin, isAuthenticated: isAdmin, logout: adminLogout } = useAdmin();
   const location = useLocation();
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Menu', path: '/menu' },
-    { name: 'About', path: '/about' },
     { name: 'Gallery', path: '/gallery' },
     { name: 'Reviews', path: '/reviews' },
     { name: 'FAQ', path: '/faq' },
+    { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
 
   const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '8801700000000';
 
   return (
-    <nav
-      className={cn(
-        'fixed top-0 left-0 w-full z-50 transition-all duration-300',
-        'border-b py-3'
-      )}
-      style={{ 
-        backgroundColor: 'var(--bg-card)',
-        borderColor: 'var(--border-light)'
-      }}
-    >
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2">
-          <div 
-            className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--accent-light)' }}
-          >
-            <span style={{ color: 'var(--accent)', fontSize: '20px' }}>☕</span>
-          </div>
-          <span className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
-            Rakib's Tea Stall
-          </span>
-        </Link>
-
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={cn(
-                'text-sm font-medium transition-colors'
-              )}
-              style={{ 
-                color: location.pathname === link.path ? 'var(--accent)' : 'var(--text-secondary)',
-                fontWeight: location.pathname === link.path ? 600 : 500
-              }}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg transition-colors"
-            style={{ backgroundColor: 'var(--bg-hover)' }}
-            title={theme === 'light' ? 'Dark mode' : 'Light mode'}
-          >
-            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-          </button>
-
-          <Link 
-            to="/cart" 
-            className="relative p-2 rounded-lg transition-colors"
-            style={{ backgroundColor: 'var(--bg-hover)' }}
-          >
-            <ShoppingCart size={18} style={{ color: 'var(--text-secondary)' }} />
-            {totalItems > 0 && (
+    <>
+      {/* Spacer for floating navbar */}
+      <div className="h-24" />
+      
+      <nav
+        className={cn(
+          'fixed top-4 left-4 right-4 z-50 transition-all duration-500',
+          scrolled ? 'mt-0' : 'mt-0'
+        )}
+      >
+        <div 
+          className={cn(
+            'mx-auto max-w-6xl transition-all duration-500',
+            scrolled ? 'rounded-2xl' : 'rounded-full'
+          )}
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)'
+          }}
+        >
+          <div className="flex justify-between items-center h-16 px-6">
+            {/* Logo - Far Left */}
+            <Link to="/" className="flex items-center gap-2 group">
+              <div 
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
+                style={{ 
+                  background: 'linear-gradient(135deg, #C5A358 0%, #B8934A 100%)',
+                  boxShadow: '0 4px 15px rgba(197, 163, 88, 0.3)'
+                }}
+              >
+                <span className="text-lg">☕</span>
+              </div>
               <span 
-                className="absolute -top-1 -right-1 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full"
-                style={{ backgroundColor: 'var(--badge)' }}
+                className="text-lg font-medium hidden sm:block"
+                style={{ 
+                  color: '#1A1A1A',
+                  fontFamily: "'Playfair Display', serif"
+                }}
               >
-                {totalItems}
+                Rakib's Tea Stall
               </span>
-            )}
-          </Link>
-
-          {isAuthenticated ? (
-            <div className="flex items-center gap-2">
-              <Link 
-                to="/profile" 
-                className="p-2 rounded-lg transition-colors"
-                style={{ backgroundColor: 'var(--accent-light)' }}
-              >
-                <User size={18} style={{ color: 'var(--accent)' }} />
-              </Link>
-              <button 
-                onClick={logout}
-                className="p-2 rounded-lg transition-colors"
-                style={{ backgroundColor: 'var(--bg-hover)' }}
-                title="Logout"
-              >
-                <LogOut size={18} style={{ color: 'var(--text-secondary)' }} />
-              </button>
-            </div>
-          ) : (
-            <Link 
-              to="/profile" 
-              className="p-2 rounded-lg transition-colors"
-              style={{ backgroundColor: 'var(--bg-hover)' }}
-            >
-              <User size={18} style={{ color: 'var(--text-secondary)' }} />
             </Link>
-          )}
 
-          {/* Admin Panel Link - Only visible to admin */}
-          {isAdmin && (
-            <div className="flex items-center gap-2 ml-2 pl-2" style={{ borderLeft: '1px solid var(--border)' }}>
-              <Link 
-                to="/admin" 
-                className="p-2 rounded-lg transition-colors flex items-center gap-2"
-                style={{ backgroundColor: 'var(--accent-light)' }}
-                title="Admin Panel"
-              >
-                <Shield size={18} style={{ color: 'var(--accent)' }} />
-                <span className="hidden lg:inline text-sm font-medium" style={{ color: 'var(--accent)' }}>Admin</span>
-              </Link>
-              <button 
-                onClick={adminLogout}
-                className="p-2 rounded-lg transition-colors"
-                style={{ backgroundColor: 'var(--bg-hover)' }}
-                title="Admin Logout"
-              >
-                <LogOut size={18} style={{ color: 'var(--text-secondary)' }} />
-              </button>
+            {/* Desktop Menu - Center */}
+            <div className="hidden lg:flex items-center gap-8">
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.path;
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className="relative text-sm font-medium transition-colors duration-300 group"
+                    style={{ 
+                      color: isActive ? '#C5A358' : '#4A4A4A',
+                      fontWeight: isActive ? 600 : 400
+                    }}
+                  >
+                    {link.name}
+                    {/* Animated underline */}
+                    <span 
+                      className={cn(
+                        'absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 transition-all duration-300',
+                        isActive ? 'w-full' : 'w-0'
+                      )}
+                      style={{ backgroundColor: '#C5A358' }}
+                    />
+                    <span 
+                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ backgroundColor: '#C5A358' }}
+                    />
+                  </Link>
+                );
+              })}
             </div>
-          )}
 
-          <a
-            href={`https://wa.me/${whatsappNumber}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden lg:flex items-center gap-2 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-            style={{ backgroundColor: '#25D366' }}
-          >
-            <MessageCircle size={16} />
-            WhatsApp
-          </a>
+            {/* Actions - Far Right */}
+            <div className="flex items-center gap-3">
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-2.5 rounded-full transition-all duration-300 hover:bg-black/5"
+                title={theme === 'light' ? 'Dark mode' : 'Light mode'}
+              >
+                {theme === 'light' ? (
+                  <Moon size={18} className="text-gray-600" />
+                ) : (
+                  <Sun size={18} style={{ color: '#C5A358' }} />
+                )}
+              </button>
 
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
+              {/* Cart */}
+              <Link 
+                to="/cart" 
+                className="relative p-2.5 rounded-full transition-all duration-300 hover:bg-black/5"
+              >
+                <ShoppingCart size={18} className="text-gray-600" />
+                {totalItems > 0 && (
+                  <span 
+                    className="absolute -top-1 -right-1 text-white text-[10px] font-semibold w-5 h-5 flex items-center justify-center rounded-full"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #C5A358 0%, #B8934A 100%)'
+                    }}
+                  >
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="md:hidden absolute top-full left-0 w-full border-t"
-            style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border)' }}
-          >
-            <div className="flex flex-col p-4 gap-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className="text-base font-medium py-3 border-b"
-                  style={{ borderColor: 'var(--border-light)', color: 'var(--text-primary)' }}
-                  onClick={() => setIsOpen(false)}
+              {/* User */}
+              {isAuthenticated ? (
+                <Link 
+                  to="/profile" 
+                  className="p-2.5 rounded-full transition-all duration-300 hover:bg-black/5"
                 >
-                  {link.name}
+                  <User size={18} className="text-gray-600" />
                 </Link>
-              ))}
+              ) : (
+                <Link 
+                  to="/profile" 
+                  className="p-2.5 rounded-full transition-all duration-300 hover:bg-black/5"
+                >
+                  <User size={18} className="text-gray-600" />
+                </Link>
+              )}
+
+              {/* Admin */}
+              {isAdmin && (
+                <Link 
+                  to="/admin" 
+                  className="p-2.5 rounded-full transition-all duration-300 hover:bg-black/5"
+                  title="Admin Panel"
+                >
+                  <BarChart3 size={18} style={{ color: '#C5A358' }} />
+                </Link>
+              )}
+
+              {/* CTA Button - Pill Shaped */}
               <a
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 text-white py-3 rounded-lg mt-2"
-                style={{ backgroundColor: '#25D366' }}
+                className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white transition-all duration-300 hover:scale-105"
+                style={{ 
+                  backgroundColor: '#0B1C14',
+                  boxShadow: '0 4px 15px rgba(11, 28, 20, 0.3)'
+                }}
               >
-                <MessageCircle size={20} />
-                Chat on WhatsApp
+                <MessageCircle size={14} />
+                Order Now
               </a>
 
-              {/* Admin Section - Only visible when admin is logged in */}
-              {isAdmin && (
-                <>
-                  <div className="border-t mt-4 pt-4">
-                    <p className="text-xs font-semibold px-3 mb-2" style={{ color: 'var(--text-muted)' }}>ADMIN PANEL</p>
-                  </div>
-                  <Link
-                    to="/admin"
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg"
-                    style={{ backgroundColor: 'var(--accent-light)', color: 'var(--accent)' }}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Shield size={20} />
-                    <span className="font-medium">Dashboard</span>
-                  </Link>
-                  <Link
-                    to="/admin/messages"
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg"
-                    style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-primary)' }}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <MessageCircle size={20} />
-                    <span className="font-medium">Messages</span>
-                  </Link>
-                  <button 
-                    onClick={() => { adminLogout(); setIsOpen(false); }}
-                    className="w-full flex items-center gap-3 px-3 py-3 rounded-lg mt-2"
-                    style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-secondary)' }}
-                  >
-                    <LogOut size={20} />
-                    <span className="font-medium">Admin Logout</span>
-                  </button>
-                </>
-              )}
+              {/* Mobile Menu Toggle */}
+              <button
+                className="lg:hidden p-2.5 rounded-full transition-all duration-300 hover:bg-black/5"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {isOpen ? (
+                  <X size={20} className="text-gray-800" />
+                ) : (
+                  <Menu size={20} className="text-gray-800" />
+                )}
+              </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+          </div>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="lg:hidden mt-2 mx-auto max-w-6xl rounded-2xl overflow-hidden"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.15)'
+              }}
+            >
+              <div className="flex flex-col p-4 gap-2">
+                {navLinks.map((link) => {
+                  const isActive = location.pathname === link.path;
+                  return (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      className="flex items-center justify-between px-5 py-4 rounded-xl text-base font-medium transition-all duration-200"
+                      style={{ 
+                        color: isActive ? '#C5A358' : '#1A1A1A',
+                        backgroundColor: isActive ? 'rgba(197, 163, 88, 0.1)' : 'transparent'
+                      }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {link.name}
+                      {isActive && (
+                        <span 
+                          className="w-2 h-2 rounded-full"
+                          style={{ backgroundColor: '#C5A358' }}
+                        />
+                      )}
+                    </Link>
+                  );
+                })}
+                
+                <div className="h-px bg-gray-200 my-2" />
+                
+                {/* Mobile CTA */}
+                <a
+                  href={`https://wa.me/${whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-5 py-4 rounded-full text-base font-medium text-white mt-2"
+                  style={{ 
+                    backgroundColor: '#0B1C14'
+                  }}
+                >
+                  <MessageCircle size={18} />
+                  Order Now via WhatsApp
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+    </>
   );
 };
 

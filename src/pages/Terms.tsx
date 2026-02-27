@@ -1,124 +1,89 @@
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FileText } from 'lucide-react';
 
 const Terms = () => {
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
   return (
-    <div 
-      className="pt-24 pb-16 min-h-screen"
-      style={{ 
-        backgroundColor: 'var(--bg-primary)',
-        fontFamily: 'var(--font-family)'
-      }}
-    >
-      {/* Back Button */}
-      <div className="container mx-auto px-4 mb-4">
-        <Link 
-          to="/" 
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full transition-all"
-          style={{ 
-            color: 'var(--text-secondary)',
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border)'
-          }}
+    <div className="pt-28 pb-20 min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <div className="container-luxury">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="max-w-3xl mx-auto"
         >
-          <ArrowLeft size={18} />
-          Back to Home
-        </Link>
-      </div>
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div 
+              className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
+              style={{ backgroundColor: 'var(--accent-light)' }}
+            >
+              <FileText size={32} style={{ color: 'var(--accent)' }} />
+            </div>
+            <h1 
+              className="text-4xl lg:text-5xl mb-4"
+              style={{ 
+                color: 'var(--text-primary)', 
+                fontFamily: 'var(--font-display)'
+              }}
+            >
+              Terms of Service
+            </h1>
+            <p style={{ color: 'var(--text-secondary)' }}>
+              Last Updated: February 2026
+            </p>
+          </div>
 
-      <div className="container mx-auto px-4 max-w-4xl">
-        <h1 
-          className="text-4xl font-bold mb-8"
-          style={{ color: 'var(--text-primary)' }}
-        >
-          Terms of Service
-        </h1>
-        <div 
-          className="space-y-6"
-          style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}
-        >
-          <p>Last Updated: October 2025</p>
-          <p>
-            Welcome to Rakib's Tea Stall. By accessing our website and using our services, you agree to comply with and be bound by the following terms and conditions.
-          </p>
-          
-          <h2 
-            className="text-2xl font-bold mt-8"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            1. Acceptance of Terms
-          </h2>
-          <p>
-            By using this website, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree, please do not use our site.
-          </p>
-          
-          <h2 
-            className="text-2xl font-bold mt-8"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            2. Use of Services
-          </h2>
-          <p>
-            Our services are intended for personal, non-commercial use. You agree not to use our website for any unlawful purpose or in any way that could damage, disable, or impair our services.
-          </p>
-          
-          <h2 
-            className="text-2xl font-bold mt-8"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            3. Orders and Payments
-          </h2>
-          <p>
-            All orders placed through our website are subject to availability and acceptance. We reserve the right to refuse any order. Prices are subject to change without notice.
-          </p>
-          
-          <h2 
-            className="text-2xl font-bold mt-8"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            4. Intellectual Property
-          </h2>
-          <p>
-            All content on this website, including text, graphics, logos, and images, is the property of Rakib's Tea Stall and is protected by intellectual property laws.
-          </p>
-          
-          <h2 
-            className="text-2xl font-bold mt-8"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            5. Limitation of Liability
-          </h2>
-          <p>
-            Rakib's Tea Stall shall not be liable for any direct, indirect, incidental, or consequential damages arising out of your use of our website or services.
-          </p>
-          
-          <h2 
-            className="text-2xl font-bold mt-8"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            6. Changes to Terms
-          </h2>
-          <p>
-            We reserve the right to modify these Terms of Service at any time. Your continued use of the website following any changes constitutes your acceptance of the new terms.
-          </p>
-          
-          <h2 
-            className="text-2xl font-bold mt-8"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            7. Contact Information
-          </h2>
-          <p>
-            If you have any questions about these Terms of Service, please contact us at hello@rakibsteastall.com.
-          </p>
-        </div>
+          {/* Content */}
+          <div className="luxury-card rounded-3xl p-8 lg:p-10">
+            <div className="space-y-6" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+              <p>
+                Welcome to Rakib's Tea Stall. By accessing our website and using our services, you agree to comply with and be bound by the following terms and conditions.
+              </p>
+              
+              <h2 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }} className="text-xl font-medium mt-8 mb-4">
+                1. Acceptance of Terms
+              </h2>
+              <p>
+                By accessing or using our website, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our services.
+              </p>
+              
+              <h2 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }} className="text-xl font-medium mt-8 mb-4">
+                2. Orders and Payments
+              </h2>
+              <p>
+                All orders placed through our website are subject to availability. We reserve the right to refuse or cancel any order for any reason. Prices are subject to change without notice.
+              </p>
+              
+              <h2 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }} className="text-xl font-medium mt-8 mb-4">
+                3. Delivery
+              </h2>
+              <p>
+                We deliver within specified areas in Dhaka. Delivery times are estimates and may vary. Additional delivery charges may apply for areas outside our standard delivery zone.
+              </p>
+              
+              <h2 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }} className="text-xl font-medium mt-8 mb-4">
+                4. Intellectual Property
+              </h2>
+              <p>
+                The content on this website is owned by Rakib's Tea Stall and is protected by copyright laws. You may not reproduce, distribute, or modify any content without our written consent.
+              </p>
+              
+              <h2 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }} className="text-xl font-medium mt-8 mb-4">
+                5. Contact Information
+              </h2>
+              <p>
+                If you have any questions about these Terms of Service, please contact us at hello@rakibsteastall.com
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
-
-      {/* Google Fonts Import */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
-      `}</style>
     </div>
   );
 };

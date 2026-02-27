@@ -368,132 +368,153 @@ const AdminPanel: React.FC = () => {
 
   return (
     <div className="pt-32 pb-24 min-h-screen" style={{ backgroundColor: 'transparent' }}>
-      <div className="container mx-auto px-4">
+      <div className="container-luxury max-w-7xl mx-auto px-4">
         {/* Header */}
-        <div className="flex flex-wrap justify-between items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-4xl font-bold font-display" style={{ color: 'var(--text-primary)' }}>
-              Admin Panel
-            </h1>
-            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-              Logged in as: <span className="font-bold text-orange-500">{admin?.username}</span>
-            </p>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="luxury-card p-8 mb-8"
+        >
+          <div className="flex flex-wrap justify-between items-center gap-6">
+            <div className="flex items-center gap-4">
+              <div 
+                className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                style={{ backgroundColor: 'var(--accent-light)' }}
+              >
+                <Menu size={28} style={{ color: 'var(--accent)' }} />
+              </div>
+              <div>
+                <h1 className="text-3xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>
+                  Admin Panel
+                </h1>
+                <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                  Welcome back, <span className="font-bold" style={{ color: 'var(--accent)' }}>{admin?.username}</span>
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={fetchData}
+                className="btn-luxury flex items-center gap-2"
+              >
+                <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
+                Refresh
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all"
+              >
+                <LogOut size={18} />
+                Logout
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={fetchData}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium"
-              style={{ backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
-            >
-              <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
-              Refresh
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium bg-red-500/10 text-red-500 hover:bg-red-500/20"
-            >
-              <LogOut size={18} />
-              Logout
-            </button>
-          </div>
-        </div>
 
-        {/* Last Update Info */}
-        <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-          Last updated: {lastUpdate.toLocaleTimeString()} (auto-refreshes every 30s)
-        </p>
+          {/* Last Update Info */}
+          <p className="text-xs mt-4" style={{ color: 'var(--text-secondary)' }}>
+            Last updated: {lastUpdate.toLocaleTimeString()} (auto-refreshes every 30s)
+          </p>
+        </motion.div>
         
         {/* Tabs */}
-        <div className="flex gap-4 mb-8 overflow-x-auto">
+        <div className="flex gap-3 mb-8 overflow-x-auto pb-2">
           {tabs.map(tab => (
-            <button
+            <motion.button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold transition-all ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold transition-all whitespace-nowrap ${
                 activeTab === tab.id 
-                  ? '' 
-                  : 'hover:opacity-80'
+                  ? 'btn-luxury' 
+                  : 'luxury-card hover:scale-[1.02] transition-transform'
               }`}
               style={{ 
-                backgroundColor: activeTab === tab.id ? 'var(--accent)' : 'var(--bg-card)',
                 color: activeTab === tab.id ? 'white' : 'var(--text-primary)'
               }}
             >
-              <tab.icon size={20} />
+              <tab.icon size={18} />
               {tab.label}
               {tab.count > 0 && (
-                <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">
                   {tab.count}
                 </span>
               )}
-            </button>
+            </motion.button>
           ))}
         </div>
 
         {/* Menu Tab */}
         {activeTab === 'menu' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Menu Items</h2>
-              <button
+              <h2 className="text-2xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>Menu Items</h2>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => { resetForm(); setEditingItem(null); setShowAddModal(true); }}
-                className="px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:scale-105 transition-transform"
-                style={{ backgroundColor: 'var(--accent)', color: 'white' }}
+                className="btn-luxury flex items-center gap-2"
               >
                 <Plus size={20} /> Add Item
-              </button>
+              </motion.button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {menuItems.map(item => (
-                <div 
+                <motion.div 
                   key={item.id} 
-                  className="rounded-3xl p-6"
-                  style={{ backgroundColor: 'var(--bg-card)' }}
+                  className="luxury-card p-6 hover:shadow-lg transition-shadow"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{item.name}</h3>
-                      <p className="text-orange-500 text-sm">{item.name_bangla}</p>
+                      <p className="text-sm" style={{ color: 'var(--accent)' }}>{item.name_bangla}</p>
                     </div>
-                    <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>৳{item.price}</span>
+                    <span className="text-2xl font-display font-bold" style={{ color: 'var(--text-primary)' }}>৳{item.price}</span>
                   </div>
-                  <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>{item.description}</p>
-                  <div className="flex items-center gap-2 mb-4">
+                  <p className="text-sm mb-4 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{item.description}</p>
+                  <div className="flex items-center gap-2 mb-4 flex-wrap">
                     <span 
                       className="text-xs font-bold uppercase px-3 py-1 rounded-full"
                       style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-secondary)' }}
                     >
                       {item.category}
                     </span>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => toggleAvailability(item)}
                       className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 ${
                         item.available 
-                          ? 'bg-green-100 text-green-600' 
-                          : 'bg-red-100 text-red-600'
+                          ? 'bg-green-500/10 text-green-500' 
+                          : 'bg-red-500/10 text-red-500'
                       }`}
                     >
                       {item.available ? <Eye size={14} /> : <EyeOff size={14} />}
                       {item.available ? 'Available' : 'Unavailable'}
-                    </button>
+                    </motion.button>
                   </div>
                   <div className="flex gap-2">
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => openEdit(item)}
-                      className="flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-2"
+                      className="flex-1 py-2.5 rounded-xl font-medium flex items-center justify-center gap-2"
                       style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-primary)' }}
                     >
                       <Edit size={16} /> Edit
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => handleDelete(item.id)}
-                      className="px-4 bg-red-100 text-red-600 rounded-xl hover:bg-red-200"
+                      className="px-4 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors"
                     >
                       <Trash2 size={16} />
-                    </button>
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -501,26 +522,28 @@ const AdminPanel: React.FC = () => {
 
         {/* Orders Tab */}
         {activeTab === 'orders' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Orders</h2>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+            <h2 className="text-2xl font-display font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Orders</h2>
             <div className="space-y-4">
               {orders.map(order => (
-                <div 
+                <motion.div 
                   key={order.id} 
-                  className="rounded-3xl p-6"
-                  style={{ backgroundColor: 'var(--bg-card)' }}
+                  className="luxury-card p-6 hover:shadow-lg transition-shadow"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <div className="flex flex-wrap justify-between items-start gap-4">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="font-bold" style={{ color: 'var(--text-primary)' }}>#{order.id}</span>
+                        <span className="font-display font-bold" style={{ color: 'var(--text-primary)' }}>#{order.id}</span>
                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          order.status === 'pending' ? 'bg-yellow-100 text-yellow-600' :
-                          order.status === 'confirmed' ? 'bg-blue-100 text-blue-600' :
-                          order.status === 'preparing' ? 'bg-purple-100 text-purple-600' :
-                          order.status === 'ready' ? 'bg-orange-100 text-orange-600' :
-                          order.status === 'delivered' ? 'bg-green-100 text-green-600' :
-                          'bg-red-100 text-red-600'
+                          order.status === 'pending' ? 'bg-yellow-500/10 text-yellow-500' :
+                          order.status === 'confirmed' ? 'bg-blue-500/10 text-blue-500' :
+                          order.status === 'preparing' ? 'bg-purple-500/10 text-purple-500' :
+                          order.status === 'ready' ? 'bg-orange-500/10 text-orange-500' :
+                          order.status === 'delivered' ? 'bg-green-500/10 text-green-500' :
+                          'bg-red-500/10 text-red-500'
                         }`}>
                           {order.status.toUpperCase()}
                         </span>
@@ -530,62 +553,76 @@ const AdminPanel: React.FC = () => {
                         <span className="flex items-center gap-1"><Phone size={14} /> {order.phone}</span>
                         <span className="flex items-center gap-1"><MapPin size={14} /> {order.address || 'N/A'}</span>
                       </div>
-                      <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>{order.items}</p>
+                      <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>{order.items}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-orange-500">৳{order.total}</p>
+                      <p className="text-2xl font-display font-bold" style={{ color: 'var(--accent)' }}>৳{order.total}</p>
                       <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{order.payment_method}</p>
                       <p className="text-xs mt-2" style={{ color: 'var(--text-secondary)' }}>
                         {new Date(order.created_at).toLocaleString()}
                       </p>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-2 mt-4">
+                  <div className="flex flex-wrap gap-2 mt-4 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
                     {order.status === 'pending' && (
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => updateOrderStatus(order.id, 'confirmed')}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl font-medium flex items-center gap-2"
+                        style={{ backgroundColor: '#3B82F6', color: 'white' }}
                       >
                         <Check size={16} /> Confirm
-                      </button>
+                      </motion.button>
                     )}
                     {order.status === 'confirmed' && (
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => updateOrderStatus(order.id, 'preparing')}
-                        className="bg-purple-500 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl font-medium flex items-center gap-2"
+                        style={{ backgroundColor: '#8B5CF6', color: 'white' }}
                       >
                         <Package size={16} /> Preparing
-                      </button>
+                      </motion.button>
                     )}
                     {order.status === 'preparing' && (
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => updateOrderStatus(order.id, 'ready')}
-                        className="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl font-medium flex items-center gap-2"
+                        style={{ backgroundColor: 'var(--accent)', color: 'white' }}
                       >
                         <Package size={16} /> Ready
-                      </button>
+                      </motion.button>
                     )}
                     {order.status === 'ready' && (
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => updateOrderStatus(order.id, 'delivered')}
-                        className="bg-green-500 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl font-medium flex items-center gap-2"
+                        style={{ backgroundColor: '#22C55E', color: 'white' }}
                       >
                         <Check size={16} /> Delivered
-                      </button>
+                      </motion.button>
                     )}
                     {order.status !== 'delivered' && order.status !== 'cancelled' && (
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => updateOrderStatus(order.id, 'cancelled')}
-                        className="bg-red-500 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl font-medium flex items-center gap-2 bg-red-500/10 text-red-500"
                       >
                         <X size={16} /> Cancel
-                      </button>
+                      </motion.button>
                     )}
                   </div>
-                </div>
+                </motion.div>
               ))}
               {orders.length === 0 && (
-                <div className="text-center py-12 rounded-3xl" style={{ backgroundColor: 'var(--bg-card)' }}>
+                <div className="text-center py-12 luxury-card">
                   <ShoppingBag size={48} className="mx-auto mb-4 text-stone-400" />
                   <p style={{ color: 'var(--text-secondary)' }}>No orders yet</p>
                 </div>
@@ -596,43 +633,49 @@ const AdminPanel: React.FC = () => {
 
         {/* Messages Tab */}
         {activeTab === 'messages' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Contact Messages</h2>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+            <h2 className="text-2xl font-display font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Contact Messages</h2>
             <div className="grid gap-4">
               {messages.map(msg => (
-                <div 
+                <motion.div 
                   key={msg.id} 
-                  className="rounded-3xl p-6"
-                  style={{ backgroundColor: 'var(--bg-card)' }}
+                  className="luxury-card p-6 hover:shadow-lg transition-shadow"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-bold text-lg" style={{ color: 'var(--text-primary)' }}>{msg.name}</h3>
-                      <p className="text-orange-500 text-sm">{msg.email}</p>
+                      <p className="text-sm" style={{ color: 'var(--accent)' }}>{msg.email}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                         {new Date(msg.created_at).toLocaleString()}
                       </span>
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => deleteMessage(msg.id)}
-                        className="p-2 rounded-lg hover:bg-red-500/10 text-red-500"
+                        className="p-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors"
                       >
                         <Trash2 size={16} />
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                   <p className="mt-4" style={{ color: 'var(--text-secondary)' }}>{msg.message}</p>
-                  <a
+                  <motion.a
+                    whileHover={{ scale: 1.02 }}
                     href={`mailto:${msg.email}`}
-                    className="inline-flex items-center gap-2 mt-4 text-orange-500 font-bold hover:underline"
+                    className="inline-flex items-center gap-2 mt-4 font-medium hover:underline"
+                    style={{ color: 'var(--accent)' }}
                   >
                     <Send size={16} /> Reply
-                  </a>
-                </div>
+                  </motion.a>
+                </motion.div>
               ))}
               {messages.length === 0 && (
-                <div className="text-center py-12 rounded-3xl" style={{ backgroundColor: 'var(--bg-card)' }}>
+                <div className="text-center py-12 luxury-card">
                   <MessageSquare size={48} className="mx-auto mb-4 text-stone-400" />
                   <p style={{ color: 'var(--text-secondary)' }}>No messages yet</p>
                 </div>
@@ -643,57 +686,61 @@ const AdminPanel: React.FC = () => {
 
         {/* Add/Edit Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          >
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="rounded-3xl p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto"
-              style={{ backgroundColor: 'var(--bg-card)' }}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="luxury-card p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto"
             >
-              <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="text-2xl font-display font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
                 {editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Name (English)</label>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="form-field form-field-spacing">
+                  <label className="form-label">Name (English)</label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl"
-                    style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-primary)' }}
+                    className="w-full px-4 py-3 rounded-xl border transition-all focus:ring-2 focus:ring-orange-500/20"
+                    style={{ backgroundColor: 'var(--bg-hover)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Name (Bangla)</label>
+                <div className="form-field form-field-spacing">
+                  <label className="form-label">Name (Bangla)</label>
                   <input
                     type="text"
                     value={formData.name_bangla}
                     onChange={e => setFormData({...formData, name_bangla: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl"
-                    style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-primary)' }}
+                    className="w-full px-4 py-3 rounded-xl border transition-all focus:ring-2 focus:ring-orange-500/20"
+                    style={{ backgroundColor: 'var(--bg-hover)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Price (BDT)</label>
+                  <div className="form-field form-field-spacing">
+                    <label className="form-label">Price (BDT)</label>
                     <input
                       type="number"
                       value={formData.price}
                       onChange={e => setFormData({...formData, price: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl"
-                      style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-primary)' }}
+                      className="w-full px-4 py-3 rounded-xl border transition-all focus:ring-2 focus:ring-orange-500/20"
+                      style={{ backgroundColor: 'var(--bg-hover)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
                       required
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Category</label>
+                  <div className="form-field form-field-spacing">
+                    <label className="form-label">Category</label>
                     <select
                       value={formData.category}
                       onChange={e => setFormData({...formData, category: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl"
-                      style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-primary)' }}
+                      className="w-full px-4 py-3 rounded-xl border transition-all focus:ring-2 focus:ring-orange-500/20"
+                      style={{ backgroundColor: 'var(--bg-hover)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
                     >
                       <option>Signature</option>
                       <option>Classic</option>
@@ -702,18 +749,18 @@ const AdminPanel: React.FC = () => {
                     </select>
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Description</label>
+                <div className="form-field form-field-spacing">
+                  <label className="form-label">Description</label>
                   <textarea
                     value={formData.description}
                     onChange={e => setFormData({...formData, description: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl"
-                    style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-primary)' }}
+                    className="w-full px-4 py-3 rounded-xl border transition-all focus:ring-2 focus:ring-orange-500/20"
+                    style={{ backgroundColor: 'var(--bg-hover)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
                     rows={3}
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>Image</label>
+                <div className="form-field form-field-spacing">
+                  <label className="form-label">Image</label>
                   
                   {/* Image Preview */}
                   <div 
@@ -752,7 +799,7 @@ const AdminPanel: React.FC = () => {
                         disabled={uploading}
                       />
                       <div 
-                        className={`w-full py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                        className={`w-full py-3 px-4 rounded-xl font-medium flex items-center justify-center gap-2 cursor-pointer transition-all ${
                           uploading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'
                         }`}
                         style={{ backgroundColor: 'var(--accent)', color: 'white' }}
@@ -771,13 +818,15 @@ const AdminPanel: React.FC = () => {
                       </div>
                     </label>
                     {formData.image && (
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         type="button"
                         onClick={() => setFormData({ ...formData, image: '/images/tea-1.png' })}
-                        className="px-4 py-3 rounded-xl font-bold bg-red-500/10 text-red-500 hover:bg-red-500/20"
+                        className="px-4 py-3 rounded-xl font-medium bg-red-500/10 text-red-500 hover:bg-red-500/20"
                       >
                         <Trash2 size={18} />
-                      </button>
+                      </motion.button>
                     )}
                   </div>
                   
@@ -787,39 +836,43 @@ const AdminPanel: React.FC = () => {
                     value={formData.image}
                     onChange={e => setFormData({...formData, image: e.target.value})}
                     placeholder="Or enter image URL..."
-                    className="w-full mt-2 px-4 py-2 rounded-xl text-sm"
-                    style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-primary)' }}
+                    className="w-full mt-2 px-4 py-2 rounded-xl text-sm border transition-all focus:ring-2 focus:ring-orange-500/20"
+                    style={{ backgroundColor: 'var(--bg-hover)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
                   />
                 </div>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.available}
                     onChange={e => setFormData({...formData, available: e.target.checked})}
                     className="w-5 h-5 rounded"
                   />
-                  <span className="font-bold" style={{ color: 'var(--text-primary)' }}>Available</span>
+                  <span className="font-medium" style={{ color: 'var(--text-primary)' }}>Available</span>
                 </label>
                 <div className="flex gap-4 pt-4">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={() => { setShowAddModal(false); setEditingItem(null); }}
-                    className="flex-1 py-3 rounded-xl border-2 font-bold"
+                    className="flex-1 py-3 rounded-xl border-2 font-medium"
                     style={{ borderColor: 'var(--border)', color: 'var(--text-primary)' }}
                   >
                     Cancel
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="flex-1 py-3 rounded-xl font-bold"
+                    className="flex-1 py-3 rounded-xl font-medium"
                     style={{ backgroundColor: 'var(--accent)', color: 'white' }}
                   >
                     {editingItem ? 'Update' : 'Add Item'}
-                  </button>
+                  </motion.button>
                 </div>
               </form>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

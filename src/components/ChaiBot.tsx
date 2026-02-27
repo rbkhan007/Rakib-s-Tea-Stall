@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, Bot, User, Sparkles } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
 
 const ChaiBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,52 +25,47 @@ const ChaiBot = () => {
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setIsLoading(true);
 
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: userMessage,
-        config: {
-          systemInstruction: `You are "Chai Bot", a friendly assistant for "Rakib's Tea Stall" in Gulshan, Dhaka. 
-          Our menu includes: 
-          - Milk Tea (Dudh Cha) - 40 BDT (Creamy, signature)
-          - Black Tea (Rong Cha) - 20 BDT (Strong, aromatic)
-          - Lemon Tea (Lebu Cha) - 25 BDT (Zesty, refreshing)
-          - Green Tea - 35 BDT (Healthy, organic)
-          - Masala Chai - 50 BDT (Spiced with cardamom, ginger)
-          - Ginger Tea - 25 BDT (Classic with fresh ginger)
-          - Iced Lemon Tea - 45 BDT (Chilled with mint)
-          - Honey Green Tea - 55 BDT (Sweetened with honey)
-          
-          Be helpful, polite, and use a bit of local Bangladeshi charm (e.g., using "Bhai", "Apni"). 
-          Recommend teas based on user mood (e.g., if tired, recommend Masala Chai or Ginger Tea). 
-          Keep responses concise.`,
-        }
-      });
-
-      const botResponse = response.text || "I'm sorry, I couldn't process that. Would you like to try our signature Milk Tea?";
-      setMessages(prev => [...prev, { role: 'bot', text: botResponse }]);
-    } catch (error) {
-      console.error("Gemini Error:", error);
-      setMessages(prev => [...prev, { role: 'bot', text: "Oops! My tea kettle is acting up. Please try again in a moment." }]);
-    } finally {
+    // Simple mock response for demo
+    setTimeout(() => {
+      const responses = [
+        "Our signature Milk Tea is absolutely delicious! Would you like to try it?",
+        "For a refreshing choice, I'd recommend our Lemon Tea!",
+        "Masala Chai is perfect if you like spicy teas with cardamom and ginger.",
+        "Our Green Tea is great for health-conscious customers!",
+      ];
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      setMessages(prev => [...prev, { role: 'bot', text: randomResponse }]);
       setIsLoading(false);
-    }
+    }, 1500);
   };
+
+  const quickReplies = [
+    "What's your best seller?",
+    "Recommend something refreshing",
+    "Show me milk tea options"
+  ];
 
   return (
     <>
-      {/* Floating Toggle Button */}
-      <button
+      {/* Toggle Button */}
+      <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-28 right-8 z-40 bg-orange-500 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center group"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-24 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+        style={{ 
+          background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)',
+          boxShadow: '0 8px 30px rgba(197, 163, 88, 0.4)'
+        }}
       >
-        {isOpen ? <X size={28} /> : <Bot size={28} />}
-        <span className="absolute right-full mr-4 bg-white dark:bg-stone-900 text-stone-900 dark:text-white px-4 py-2 rounded-xl text-sm font-bold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none flex items-center gap-2">
-          <Sparkles size={14} className="text-orange-500" />
-          Ask Chai Bot
-        </span>
-      </button>
+        {isOpen ? (
+          <X className="w-6 h-6 text-white" />
+        ) : (
+          <Sparkles className="w-6 h-6 text-white" />
+        )}
+      </motion.button>
 
       {/* Chat Window */}
       <AnimatePresence>
@@ -80,74 +74,112 @@ const ChaiBot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-48 right-8 z-50 w-[350px] sm:w-[400px] h-[500px] bg-white dark:bg-stone-900 rounded-[2.5rem] shadow-2xl border dark:border-stone-800 flex flex-col overflow-hidden"
+            className="fixed bottom-36 right-6 z-40 w-80 lg:w-96 rounded-2xl overflow-hidden luxury-card"
+            style={{ maxHeight: '500px' }}
           >
             {/* Header */}
-            <div className="bg-primary-gradient p-6 text-white flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <Bot size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold">Chai Bot</h3>
-                  <p className="text-xs opacity-80 flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    Online & Brewing
-                  </p>
-                </div>
+            <div 
+              className="p-4 flex items-center gap-3"
+              style={{ 
+                background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)'
+              }}
+            >
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                <Bot className="w-5 h-5 text-white" />
               </div>
-              <button onClick={() => setIsOpen(false)} className="hover:rotate-90 transition-transform">
-                <X size={24} />
-              </button>
+              <div>
+                <p className="text-white font-medium">Chai Assistant</p>
+                <p className="text-white/70 text-xs">Always here to help</p>
+              </div>
             </div>
 
             {/* Messages */}
             <div 
               ref={scrollRef}
-              className="flex-grow p-6 overflow-y-auto space-y-4 bg-stone-50 dark:bg-stone-950/50"
+              className="p-4 space-y-3 overflow-y-auto"
+              style={{ height: '280px', backgroundColor: 'var(--bg-secondary)' }}
             >
-              {messages.map((msg, i) => (
-                <div 
-                  key={i} 
+              {messages.map((msg, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-[80%] p-4 rounded-2xl text-sm ${
-                    msg.role === 'user' 
-                      ? 'bg-orange-500 text-white rounded-tr-none' 
-                      : 'bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200 shadow-sm rounded-tl-none'
-                  }`}>
-                    {msg.text}
+                  <div 
+                    className={`max-w-[80%] px-4 py-2 rounded-2xl ${
+                      msg.role === 'user' 
+                        ? 'text-white rounded-br-md' 
+                        : 'rounded-2xl rounded-bl-md'
+                    }`}
+                    style={{ 
+                      backgroundColor: msg.role === 'user' 
+                        ? 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)'
+                        : 'var(--bg-card)',
+                      color: msg.role === 'user' ? 'white' : 'var(--text-primary)'
+                    }}
+                  >
+                    <p className="text-sm">{msg.text}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white dark:bg-stone-800 p-4 rounded-2xl rounded-tl-none shadow-sm flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" />
-                    <span className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                    <span className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                  <div className="px-4 py-2 rounded-2xl rounded-bl-md" style={{ backgroundColor: 'var(--bg-card)' }}>
+                    <div className="flex gap-1">
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: 'var(--accent)' }} />
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: 'var(--accent)', animationDelay: '0.1s' }} />
+                      <span className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: 'var(--accent)', animationDelay: '0.2s' }} />
+                    </div>
                   </div>
                 </div>
               )}
             </div>
 
+            {/* Quick Replies */}
+            {messages.length <= 2 && (
+              <div className="px-4 pb-2 flex flex-wrap gap-2">
+                {quickReplies.map((reply, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => { setInput(reply); }}
+                    className="px-3 py-1.5 rounded-full text-xs transition-colors"
+                    style={{ 
+                      backgroundColor: 'var(--accent-light)', 
+                      color: 'var(--accent)' 
+                    }}
+                  >
+                    {reply}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Input */}
-            <div className="p-4 bg-white dark:bg-stone-900 border-t dark:border-stone-800">
-              <div className="relative">
-                <input 
+            <div className="p-3 border-t" style={{ borderColor: 'var(--border-light)' }}>
+              <div className="flex gap-2">
+                <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Ask about our tea..."
-                  className="w-full pl-4 pr-12 py-3 rounded-full bg-stone-100 dark:bg-stone-800 border-none focus:ring-2 focus:ring-orange-500 transition-all text-sm"
+                  placeholder="Type a message..."
+                  className="flex-1 px-4 py-2 rounded-full text-sm"
+                  style={{ 
+                    backgroundColor: 'var(--bg-secondary)', 
+                    border: '1px solid var(--border-light)',
+                    color: 'var(--text-primary)'
+                  }}
                 />
-                <button 
+                <button
                   onClick={handleSend}
                   disabled={!input.trim() || isLoading}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform disabled:opacity-50"
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-50"
+                  style={{ 
+                    background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)'
+                  }}
                 >
-                  <Send size={16} />
+                  <Send className="w-4 h-4 text-white" />
                 </button>
               </div>
             </div>

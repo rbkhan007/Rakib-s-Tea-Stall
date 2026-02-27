@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Coffee, RefreshCw, Lightbulb, MapPin, Award, Users, Heart, ArrowLeft } from 'lucide-react';
+import { Coffee, Award, Users, Heart, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const About = () => {
-  const [activeSection, setActiveSection] = useState('heritage');
-  
-  const sections = [
-    { id: 'heritage', label: "Our Heritage" },
-    { id: 'vision', label: "Rakib's Vision" },
-    { id: 'values', label: "Our Values" },
-  ];
-
   const stats = [
     { icon: Users, value: '10K+', label: 'Happy Customers' },
     { icon: Coffee, value: '500K+', label: 'Cups Served' },
@@ -19,343 +11,246 @@ const About = () => {
     { icon: Heart, value: '4.9', label: 'Average Rating' },
   ];
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
   return (
-    <div 
-      className="pt-24 pb-16 min-h-screen"
-      style={{ 
-        backgroundColor: 'var(--bg-primary)',
-        fontFamily: 'var(--font-family)'
-      }}
-    >
-      {/* Back Button */}
-      <div className="container mx-auto px-4 mb-4">
-        <Link 
-          to="/" 
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full transition-all hover:scale-105"
-          style={{ 
-            color: 'var(--accent)',
-            backgroundColor: 'var(--accent-light)',
-            border: '1px solid var(--border)'
-          }}
+    <div className="pt-28 pb-20 min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <div className="container-luxury">
+        {/* Hero Section */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+          className="text-center mb-20"
         >
-          <ArrowLeft size={18} />
-          Back to Home
-        </Link>
-      </div>
+          <motion.span
+            variants={fadeInUp}
+            className="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6"
+            style={{ backgroundColor: 'var(--accent-light)', color: 'var(--accent)' }}
+          >
+            Our Story
+          </motion.span>
+          
+          <motion.h1
+            variants={fadeInUp}
+            className="text-5xl lg:text-7xl mb-6"
+            style={{ 
+              color: 'var(--text-primary)', 
+              fontFamily: 'var(--font-display)'
+            }}
+          >
+            A Legacy of
+            <br />
+            <span className="text-gradient-gold">Excellence</span>
+          </motion.h1>
+          
+          <motion.p
+            variants={fadeInUp}
+            className="text-lg max-w-2xl mx-auto"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            Since 2018, Rakib's Tea Stall has been serving the finest authentic Bangladeshi chai 
+            in the heart of Gulshan-2, Dhaka. What started as a small stall has become a beloved 
+            destination for tea enthusiasts.
+          </motion.p>
+        </motion.div>
 
-      <div className="container mx-auto px-4">
-        {/* Minimalist Navigation */}
-        <nav 
-          className="fixed top-0 left-0 right-0 z-50 py-4"
-          style={{ 
-            backgroundColor: 'var(--bg-card)', 
-            backdropFilter: 'blur(12px)', 
-            borderBottom: '1px solid var(--border-light)' 
-          }}
+        {/* Stats */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
         >
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-center gap-8">
-              {['Home', 'Menu', 'About', 'Gallery', 'Contact'].map((item) => (
-                <a
-                  key={item}
-                  href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-                  className="text-sm font-medium transition-colors relative group"
-                  style={{ color: item === 'About' ? 'var(--accent)' : 'var(--text-secondary)' }}
-                >
-                  {item}
-                  <span 
-                    className="absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"
-                    style={{ backgroundColor: 'var(--accent)' }}
-                  />
-                </a>
-              ))}
-            </div>
-          </div>
-        </nav>
-
-        <div className="pt-24 pb-16">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Left Sidebar */}
-              <div className="w-full lg:w-64 shrink-0">
-                <div className="lg:sticky lg:top-24 space-y-1">
-                  {sections.map((section) => (
-                    <button
-                      key={section.id}
-                      onClick={() => setActiveSection(section.id)}
-                      className="w-full text-left px-4 py-3 relative flex items-center gap-3 transition-colors rounded-lg"
-                      style={{ 
-                        color: activeSection === section.id ? 'var(--text-primary)' : 'var(--text-secondary)',
-                        backgroundColor: activeSection === section.id ? 'var(--bg-hover)' : 'transparent',
-                      }}
-                    >
-                      {activeSection === section.id && (
-                        <motion.div
-                          layoutId="activeIndicator"
-                          className="absolute left-0 top-0 bottom-0 w-1 rounded-r"
-                          style={{ backgroundColor: 'var(--accent)' }}
-                        />
-                      )}
-                      <span className="font-medium">{section.label}</span>
-                    </button>
-                  ))}
-                </div>
+          {stats.map((stat, idx) => (
+            <motion.div
+              key={idx}
+              variants={fadeInUp}
+              className="luxury-card rounded-2xl p-8 text-center"
+            >
+              <div 
+                className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
+                style={{ backgroundColor: 'var(--accent-light)' }}
+              >
+                <stat.icon size={24} style={{ color: 'var(--accent)' }} />
               </div>
-
-              {/* Main Content */}
-              <div className="flex-1">
-                {/* Profile Card */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl p-8 mb-8"
-                  style={{ 
-                    backgroundColor: 'var(--bg-card)',
-                    backdropFilter: 'blur(12px)',
-                    border: '1px solid var(--border)'
-                  }}
-                >
-                  <div className="flex flex-col md:flex-row items-center gap-8">
-                    {/* Circular Portrait with Glow */}
-                    <div className="relative">
-                      <div 
-                        className="w-48 h-48 rounded-full p-1"
-                        style={{ 
-                          background: 'linear-gradient(135deg, var(--accent) 0%, #FBBF24 100%)',
-                          boxShadow: '0 0 30px var(--accent-light)'
-                        }}
-                      >
-                        <img
-                          src="/images/profile.jpg"
-                          alt="Rakib's Tea Stall Owner"
-                          className="w-full h-full rounded-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/owner/400/400';
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Header Text */}
-                    <div className="text-center md:text-left flex-1">
-                      <h1 
-                        className="text-4xl md:text-5xl font-bold mb-4"
-                        style={{ color: 'var(--text-primary)' }}
-                      >
-                        Our Story
-                      </h1>
-                      <p 
-                        className="text-lg leading-relaxed"
-                        style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}
-                      >
-                        Welcome to Rakib's Tea Stall – where tradition meets taste. 
-                        Since 2018, we've been serving the finest authentic Bangladeshi chai 
-                        in the heart of Gulshan-2, Dhaka.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Content Sections */}
-                {activeSection === 'heritage' && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="rounded-2xl p-8"
-                    style={{ 
-                      backgroundColor: 'var(--bg-card)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid var(--border)'
-                    }}
-                  >
-                    <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
-                      Our Heritage
-                    </h2>
-                    <div className="space-y-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-                      <p>
-                        Born from a simple passion for the perfect cup of chai, Rakib's Tea Stall 
-                        has become a beloved destination for tea enthusiasts across Dhaka. Our journey 
-                        began with a small stall and a big dream – to bring authentic Bangladeshi 
-                        tea culture to everyone.
-                      </p>
-                      <p>
-                        Every cup we serve carries the rich traditions of our ancestors, brewing methods 
-                        passed down through generations, and the finest locally sourced ingredients. 
-                        From our signature milk tea to the refreshing lemon tea, each blend is crafted 
-                        with love and precision.
-                      </p>
-                      <p>
-                        What started as a family business has grown into a community gathering place, 
-                        where friends meet, families bond, and every visitor feels like home.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeSection === 'vision' && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="rounded-2xl p-8"
-                    style={{ 
-                      backgroundColor: 'var(--bg-card)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid var(--border)'
-                    }}
-                  >
-                    <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
-                      Rakib's Vision
-                    </h2>
-                    <div className="space-y-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-                      <p>
-                        Our vision is simple yet ambitious: to be the most beloved tea destination 
-                        in Bangladesh, where every cup tells a story of quality, authenticity, and 
-                        warmth.
-                      </p>
-                      <p>
-                        We dream of expanding our reach beyond Dhaka, bringing the authentic taste 
-                        of Rakib's Tea to every corner of Bangladesh. But more than growth, we 
-                        aim to preserve the soul of traditional tea-making while embracing modern 
-                        hospitality.
-                      </p>
-                      <p>
-                        Every cup we serve is our promise to you – a promise of exceptional taste, 
-                        unwavering quality, and a moments of pure satisfaction.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeSection === 'values' && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="rounded-2xl p-8"
-                    style={{ 
-                      backgroundColor: 'var(--bg-card)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid var(--border)'
-                    }}
-                  >
-                    <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
-                      Our Values
-                    </h2>
-                    <div className="grid grid-cols-2 gap-4">
-                      {[
-                        { title: 'Quality First', desc: 'Only the finest ingredients' },
-                        { title: 'Authentic Taste', desc: 'Traditional recipes' },
-                        { title: 'Warm Hospitality', desc: 'Every guest family' },
-                        { title: 'Clean & Hygienic', desc: '100% quality assurance' },
-                        { title: 'Community', desc: 'Building relationships' },
-                        { title: 'Innovation', desc: 'Better every day' },
-                      ].map((value, i) => (
-                        <div 
-                          key={i}
-                          className="p-4 rounded-xl transition-all hover:scale-[1.02]"
-                          style={{ 
-                            backgroundColor: 'var(--bg-hover)',
-                            border: '1px solid var(--border-light)'
-                          }}
-                        >
-                          <h3 className="font-bold mb-1" style={{ color: 'var(--accent)' }}>
-                            {value.title}
-                          </h3>
-                          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                            {value.desc}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                  {stats.map((stat, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      className="rounded-xl p-6 text-center transition-all hover:scale-[1.02]"
-                      style={{ 
-                        backgroundColor: 'var(--bg-card)',
-                        border: '1px solid var(--border)'
-                      }}
-                    >
-                      <stat.icon 
-                        className="w-8 h-8 mx-auto mb-3" 
-                        style={{ color: 'var(--accent)' }} 
-                      />
-                      <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                        {stat.value}
-                      </div>
-                      <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                        {stat.label}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Bottom Callout - Did You Know */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="rounded-2xl p-6 mt-8 flex items-center gap-4"
-                  style={{ 
-                    backgroundColor: 'var(--bg-card)',
-                    border: '1px solid var(--border)'
-                  }}
-                >
-                  <div 
-                    className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: 'var(--accent-light)' }}
-                  >
-                    <Lightbulb className="w-6 h-6" style={{ color: 'var(--accent)' }} />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold" style={{ color: 'var(--text-primary)' }}>
-                      Did You Know?
-                    </h3>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      We serve over 500 cups of our signature Masala Chai every single day!
-                    </p>
-                  </div>
-                  <button 
-                    className="p-2 rounded-full transition-colors"
-                    style={{ backgroundColor: 'var(--bg-hover)', color: 'var(--text-secondary)' }}
-                    onClick={() => window.location.reload()}
-                  >
-                    <RefreshCw className="w-5 h-5" />
-                  </button>
-                </motion.div>
-
-                {/* Location */}
-                <div 
-                  className="rounded-2xl p-8 mt-8" 
-                  style={{ 
-                    backgroundColor: 'var(--bg-card)',
-                    border: '1px solid var(--border)'
-                  }}
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <MapPin className="w-6 h-6" style={{ color: 'var(--accent)' }} />
-                    <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                      Visit Us
-                    </h3>
-                  </div>
-                  <p style={{ color: 'var(--text-secondary)' }}>
-                    House 12, Road 90, Gulshan-2, Dhaka
-                  </p>
-                  <p className="mt-2 text-sm" style={{ color: 'var(--text-muted)' }}>
-                    Open: 8AM - 11PM (Every Day)
-                  </p>
-                </div>
+              <div 
+                className="text-3xl font-medium mb-1"
+                style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
+              >
+                {stat.value}
               </div>
+              <div style={{ color: 'var(--text-secondary)' }} className="text-sm">{stat.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Content Section */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-20">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <h2 
+              className="text-4xl mb-6"
+              style={{ 
+                color: 'var(--text-primary)', 
+                fontFamily: 'var(--font-display)'
+              }}
+            >
+              Our Heritage
+            </h2>
+            <div className="space-y-4" style={{ color: 'var(--text-secondary)' }}>
+              <p>
+                Born from a passion for the perfect cup of chai, Rakib's Tea Stall brings 
+                together traditional recipes passed down through generations with modern 
+                brewing techniques.
+              </p>
+              <p>
+                We source our tea leaves from the finest gardens in Sylhet, known for their 
+                exceptional quality and unique flavor profiles. Combined with fresh local 
+                milk and our secret spice blend, each cup tells a story of craftsmanship 
+                and dedication.
+              </p>
+              <p>
+                Every chai is brewed with love, ensuring that each sip transports you to 
+                the vibrant tea culture of Bangladesh.
+              </p>
             </div>
-          </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <div 
+              className="aspect-square rounded-3xl overflow-hidden"
+              style={{ backgroundColor: 'var(--bg-secondary)' }}
+            >
+              <img 
+                src="/images/tea-1.png" 
+                alt="Our Tea" 
+                className="w-full h-full object-contain p-8"
+                style={{ filter: 'drop-shadow(0 20px 40px rgba(197, 163, 88, 0.2))' }}
+              />
+            </div>
+            <div 
+              className="absolute -bottom-6 -right-6 p-6 rounded-2xl"
+              style={{ 
+                background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)',
+                boxShadow: '0 10px 40px rgba(197, 163, 88, 0.4)'
+              }}
+            >
+              <Sparkles className="text-white" size={32} />
+            </div>
+          </motion.div>
         </div>
+
+        {/* Values */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="text-center mb-16"
+        >
+          <h2 
+            className="text-4xl mb-4"
+            style={{ 
+              color: 'var(--text-primary)', 
+              fontFamily: 'var(--font-display)'
+            }}
+          >
+            Our Values
+          </h2>
+          <p style={{ color: 'var(--text-secondary)' }} className="max-w-xl mx-auto">
+            The principles that guide everything we do
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="grid md:grid-cols-3 gap-8"
+        >
+          {[
+            {
+              title: 'Quality First',
+              description: 'We never compromise on the quality of our ingredients. Only the finest tea leaves, freshest milk, and purest spices make it into your cup.',
+              icon: Award
+            },
+            {
+              title: 'Traditional Craft',
+              description: 'Our recipes have been perfected over generations, preserving the authentic taste of Bangladeshi chai while maintaining consistent quality.',
+              icon: Coffee
+            },
+            {
+              title: 'Warm Hospitality',
+              description: 'Every customer is family. We strive to create a welcoming atmosphere where everyone feels at home.',
+              icon: Heart
+            }
+          ].map((value, idx) => (
+            <motion.div
+              key={idx}
+              variants={fadeInUp}
+              className="luxury-card rounded-2xl p-8"
+            >
+              <div 
+                className="w-14 h-14 rounded-full flex items-center justify-center mb-5"
+                style={{ backgroundColor: 'var(--accent-light)' }}
+              >
+                <value.icon size={24} style={{ color: 'var(--accent)' }} />
+              </div>
+              <h3 
+                className="text-xl font-medium mb-3"
+                style={{ 
+                  color: 'var(--text-primary)', 
+                  fontFamily: 'var(--font-display)'
+                }}
+              >
+                {value.title}
+              </h3>
+              <p style={{ color: 'var(--text-secondary)' }} className="text-sm leading-relaxed">
+                {value.description}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="text-center mt-20"
+        >
+          <Link 
+            to="/menu" 
+            className="btn-luxury btn-primary-luxury"
+          >
+            Explore Our Menu
+          </Link>
+        </motion.div>
       </div>
     </div>
   );

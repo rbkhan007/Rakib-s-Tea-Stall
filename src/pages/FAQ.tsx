@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Minus, HelpCircle, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Plus, Minus, HelpCircle } from 'lucide-react';
 
 const faqs = [
   {
     question: "What are your opening hours?",
-    answer: "We are open every day from 10:00 AM to 10:00 PM. On Fridays, we open slightly later at 2:00 PM."
+    answer: "We are open every day from 8:00 AM to 11:00 PM. On Fridays and Saturdays, we stay open until midnight."
   },
   {
     question: "Do you offer home delivery?",
-    answer: "Yes! We offer home delivery within Gulshan-1, Gulshan-2, and Banani. You can order directly through our website or call us."
+    answer: "Yes! We offer home delivery within Gulshan-1, Gulshan-2, and Banani. You can order directly through our website or WhatsApp."
   },
   {
     question: "Is your tea made with fresh milk?",
@@ -26,144 +25,123 @@ const faqs = [
   },
   {
     question: "Where are you located?",
-    answer: "Our main stall is located in the heart of Gulshan-2, Dhaka, near the DCC Market. You can find the exact location on our Contact page map."
+    answer: "Our main stall is located at House 12, Road 90, Gulshan-2, Dhaka, near the DCC Market. You can find the exact location on our Contact page map."
   }
 ];
 
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  return (
-    <div 
-      className="pt-24 pb-16 min-h-screen"
-      style={{ 
-        backgroundColor: 'var(--bg-primary)',
-        fontFamily: 'var(--font-family)'
-      }}
-    >
-      {/* Back Button */}
-      <div className="container mx-auto px-4 mb-4">
-        <Link 
-          to="/" 
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full transition-all"
-          style={{ 
-            color: 'var(--accent)',
-            backgroundColor: 'var(--accent-light)',
-            border: '1px solid var(--border)'
-          }}
-        >
-          <ArrowLeft size={18} />
-          Back to Home
-        </Link>
-      </div>
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
 
-      <div className="container mx-auto px-4 max-w-3xl">
-        <div className="text-center mb-16">
-          <div 
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6"
-            style={{ 
-              backgroundColor: 'var(--accent-light)',
-              color: 'var(--accent)'
-            }}
+  return (
+    <div className="pt-28 pb-20 min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <div className="container-luxury">
+        {/* Header */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="text-center mb-16"
+        >
+          <span 
+            className="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-4"
+            style={{ backgroundColor: 'var(--accent-light)', color: 'var(--accent)' }}
           >
-            <HelpCircle size={32} />
-          </div>
+            Help
+          </span>
           <h1 
-            className="text-4xl md:text-5xl font-bold mb-4"
+            className="text-5xl lg:text-6xl mb-4"
             style={{ 
               color: 'var(--text-primary)', 
-              fontFamily: 'var(--font-family)'
+              fontFamily: 'var(--font-display)'
             }}
           >
             Frequently Asked Questions
           </h1>
-          <p style={{ color: 'var(--text-secondary)' }}>
-            Everything you need to know about Rakib's Tea Stall.
+          <p style={{ color: 'var(--text-secondary)' }} className="max-w-xl mx-auto">
+            Find answers to the most common questions about our tea stall
           </p>
-        </div>
+        </motion.div>
 
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div 
-              key={index}
-              className="rounded-3xl overflow-hidden transition-all hover:scale-[1.01]"
-              style={{ 
-                backgroundColor: 'var(--bg-card)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid var(--border)'
-              }}
+        {/* FAQ Accordion */}
+        <motion.div 
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="max-w-2xl mx-auto space-y-4"
+        >
+          {faqs.map((faq, idx) => (
+            <motion.div
+              key={idx}
+              className="luxury-card rounded-2xl overflow-hidden"
             >
               <button
-                onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                className="w-full px-8 py-6 flex items-center justify-between text-left transition-colors"
-                style={{ color: 'var(--text-primary)' }}
+                onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
+                className="w-full flex items-center justify-between p-6 text-left"
               >
                 <span 
-                  className="text-lg font-bold"
-                  style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+                  className="font-medium pr-4"
+                  style={{ color: 'var(--text-primary)' }}
                 >
                   {faq.question}
                 </span>
-                {activeIndex === index ? (
-                  <Minus size={20} style={{ color: 'var(--accent)' }} />
-                ) : (
-                  <Plus size={20} style={{ color: 'var(--text-secondary)' }} />
-                )}
+                <div 
+                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors"
+                  style={{ 
+                    backgroundColor: activeIndex === idx ? 'var(--accent)' : 'var(--bg-secondary)',
+                    color: activeIndex === idx ? 'white' : 'var(--text-secondary)'
+                  }}
+                >
+                  {activeIndex === idx ? <Minus size={18} /> : <Plus size={18} />}
+                </div>
               </button>
               <AnimatePresence>
-                {activeIndex === index && (
+                {activeIndex === idx && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div 
-                      className="px-8 pb-6 leading-relaxed"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
+                    <div className="px-6 pb-6" style={{ color: 'var(--text-secondary)' }}>
                       {faq.answer}
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div 
-          className="mt-16 p-8 rounded-[2.5rem] text-center transition-all hover:scale-[1.02]"
-          style={{ 
-            backgroundColor: 'var(--bg-card)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid var(--border)'
-          }}
+        {/* Still Have Questions */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="text-center mt-16"
         >
-          <h3 
-            className="text-2xl font-bold mb-4"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            Still have questions?
-          </h3>
-          <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>We're here to help! Reach out to us anytime.</p>
-          <a 
-            href="/contact" 
-            className="inline-block px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform"
-            style={{ 
-              backgroundColor: 'var(--accent)',
-              color: 'var(--text-primary)',
-              boxShadow: '0 0 20px rgba(255, 159, 28, 0.4)'
-            }}
-          >
-            Contact Support
-          </a>
-        </div>
+          <div className="luxury-card rounded-2xl p-8 max-w-xl mx-auto">
+            <HelpCircle size={32} className="mx-auto mb-4" style={{ color: 'var(--accent)' }} />
+            <h3 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }} className="text-xl mb-2">
+              Still have questions?
+            </h3>
+            <p style={{ color: 'var(--text-secondary)' }} className="mb-4">
+              Can't find the answer you're looking for? Please contact us.
+            </p>
+            <a 
+              href="/contact" 
+              className="btn-luxury btn-primary-luxury"
+            >
+              Contact Us
+            </a>
+          </div>
+        </motion.div>
       </div>
-
-      {/* Google Fonts Import */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
-      `}</style>
     </div>
   );
 };

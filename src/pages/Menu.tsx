@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
-import { ShoppingCart, Plus, Search, Sparkles, Coffee, Zap, Heart, Thermometer, X, ExternalLink } from 'lucide-react';
+import { Search, Sparkles, X, ExternalLink, Coffee } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface MenuItem {
@@ -41,7 +41,6 @@ const Menu = () => {
     }
   };
 
-  // Default menu when API fails
   const defaultMenuItems: MenuItem[] = [
     { id: 1, name: 'Milk Tea', name_bangla: 'দুধ চা', price: 40, category: 'Signature', description: 'Our famous creamy milk tea with secret spices.', image: '/images/tea-1.png', available: 1 },
     { id: 2, name: 'Black Tea', name_bangla: 'রং চা', price: 20, category: 'Classic', description: 'Strong and aromatic black tea brewed to perfection.', image: '/images/tea-2.png', available: 1 },
@@ -54,7 +53,6 @@ const Menu = () => {
   ];
 
   const displayItems = menuItems.length > 0 ? menuItems : defaultMenuItems;
-
   const categories = ['All', 'Signature', 'Classic', 'Refreshing', 'Healthy'];
 
   const filteredItems = displayItems.filter(item => {
@@ -77,134 +75,194 @@ const Menu = () => {
 
   const handleWhatsAppOrder = (item: MenuItem) => {
     const phone = import.meta.env.VITE_WHATSAPP_NUMBER || '8801700000000';
-    const message = `Hi! I'd like to order:\n\n${item.name} - Tk${item.price}\n\nPlease confirm my order.`;
+    const message = `Hi! I'd like to order:\n\n${item.name} - ৳${item.price}\n\nPlease confirm my order.`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const accentColor = 'var(--accent)';
-  const textPrimary = 'var(--text-primary)';
-  const textSecondary = 'var(--text-secondary)';
-  const bgCard = 'var(--bg-card)';
-  const bgHover = 'rgba(255, 255, 255, 0.05)';
-  const bgLight = 'var(--accent-light)';
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
 
   return (
-    <div className="pt-24 pb-16" style={{ backgroundColor: 'transparent', minHeight: '100vh' }}>
-      <div className="container mx-auto px-4">
+    <div className="pt-28 pb-20" style={{ backgroundColor: 'transparent', minHeight: '100vh' }}>
+      <div className="container-luxury">
         {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: textPrimary }}>Our Menu</h1>
-          <p style={{ color: textSecondary }}>Discover our delicious tea selection</p>
-        </div>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="text-center mb-16"
+        >
+          <span 
+            className="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-4"
+            style={{ backgroundColor: 'var(--accent-light)', color: 'var(--accent)' }}
+          >
+            Our Collection
+          </span>
+          <h1 
+            className="text-5xl lg:text-6xl mb-4"
+            style={{ 
+              color: 'var(--text-primary)', 
+              fontFamily: 'var(--font-display)'
+            }}
+          >
+            The Menu
+          </h1>
+          <p style={{ color: 'var(--text-secondary)' }} className="max-w-md mx-auto">
+            Discover our handcrafted selection of premium chai blends
+          </p>
+        </motion.div>
 
         {/* Search & Filter */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2" size={20} style={{ color: textSecondary }} />
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="flex flex-col md:flex-row gap-4 mb-10"
+        >
+          <div className="input-icon-wrapper flex-1">
+            <Search className="icon" size={18} />
             <input
               type="text"
-              placeholder="Search teas..."
+              placeholder="Search for teas..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl border"
-              style={{ backgroundColor: bgCard, borderColor: 'var(--border)', color: textPrimary }}
+              className="w-full pl-12 pr-4 py-4 rounded-full"
+              style={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--border-light)', 
+                color: 'var(--text-primary)'
+              }}
             />
           </div>
           <button
             onClick={() => setShowQuiz(true)}
-            className="px-6 py-3 rounded-xl font-medium transition-all hover:scale-105"
-            style={{ backgroundColor: accentColor, color: 'white' }}
+            className="btn-luxury btn-primary-luxury flex-center-gap"
           >
+            <Sparkles size={16} />
             Find My Tea
           </button>
-        </div>
+        </motion.div>
 
         {/* Categories */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="flex flex-wrap justify-center gap-3 mb-12"
+        >
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className="px-5 py-2 rounded-full font-medium transition-all"
+              className="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300"
               style={{
-                backgroundColor: activeCategory === cat ? accentColor : bgCard,
-                color: activeCategory === cat ? 'white' : textSecondary,
-                border: `1px solid ${activeCategory === cat ? accentColor : 'var(--border)'}`
+                backgroundColor: activeCategory === cat 
+                  ? 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)' 
+                  : 'var(--bg-card)',
+                background: activeCategory === cat 
+                  ? 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)' 
+                  : undefined,
+                color: activeCategory === cat ? 'white' : 'var(--text-secondary)',
+                border: activeCategory === cat ? 'none' : '1px solid var(--border-light)',
+                boxShadow: activeCategory === cat 
+                  ? '0 4px 15px rgba(197, 163, 88, 0.3)' 
+                  : 'none'
               }}
             >
               {cat}
             </button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Menu Grid */}
         {loading ? (
-          <div className="text-center py-12">
-            <p style={{ color: textSecondary }}>Loading menu...</p>
+          <div className="text-center py-20">
+            <div className="w-12 h-12 rounded-full mx-auto" style={{ background: 'var(--accent-light)' }}>
+              <Coffee className="w-6 h-6 mx-auto mt-3 animate-spin" style={{ color: 'var(--accent)' }} />
+            </div>
+            <p style={{ color: 'var(--text-secondary)' }} className="mt-4">Loading menu...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredItems.map((item, idx) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                className="rounded-2xl overflow-hidden transition-shadow"
-                style={{ 
-                  backgroundColor: bgCard, 
-                  boxShadow: 'var(--shadow-sm)',
-                  border: '1px solid var(--border)'
-                }}
-              >
-                <div className="aspect-square relative" style={{ backgroundColor: bgCard }}>
-                  <img 
-                    src={item.image || '/images/placeholder.svg'} 
-                    alt={item.name}
-                    className="w-full h-full object-contain p-2"
-                  />
-                  <span 
-                    className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium"
-                    style={{ backgroundColor: bgLight, color: accentColor }}
+          <motion.div 
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            <AnimatePresence mode='popLayout'>
+              {filteredItems.map((item, idx) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className="luxury-card rounded-2xl group"
+                >
+                  <div 
+                    className="aspect-square p-8 flex items-center justify-center relative overflow-hidden"
+                    style={{ backgroundColor: 'var(--bg-secondary)' }}
                   >
-                    {item.category}
-                  </span>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-lg" style={{ color: textPrimary }}>{item.name}</h3>
-                  <p style={{ color: accentColor }} className="text-sm mb-2">{item.name_bangla}</p>
-                  <p className="text-sm mb-3 line-clamp-2" style={{ color: textSecondary }}>{item.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xl font-bold" style={{ color: textPrimary }}>Tk{item.price}</span>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleAddToCart(item)}
-                        className="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:scale-105"
-                        style={{ backgroundColor: accentColor, color: 'white' }}
-                      >
-                        Add
-                      </button>
-                      <button
-                        onClick={() => handleWhatsAppOrder(item)}
-                        className="p-2 rounded-lg transition-all hover:scale-105"
-                        style={{ backgroundColor: '#25D366', color: 'white' }}
-                        title="Order via WhatsApp"
-                      >
-                        <ExternalLink size={18} />
-                      </button>
+                    <img 
+                      src={item.image || '/images/placeholder.svg'} 
+                      alt={item.name} 
+                      className="w-40 h-40 object-contain transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    <span 
+                      className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium"
+                      style={{ 
+                        backgroundColor: 'var(--accent-light)',
+                        color: 'var(--accent)'
+                      }}
+                    >
+                      {item.category}
+                    </span>
+                  </div>
+                  <div className="p-6">
+                    <h3 
+                      className="text-xl font-medium mb-1"
+                      style={{ 
+                        color: 'var(--text-primary)', 
+                        fontFamily: 'var(--font-display)'
+                      }}
+                    >
+                      {item.name}
+                    </h3>
+                    <p style={{ color: 'var(--accent)' }} className="font-medium text-sm mb-3">{item.name_bangla}</p>
+                    <p style={{ color: 'var(--text-secondary)' }} className="text-sm mb-4 line-clamp-2">{item.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-medium" style={{ color: 'var(--text-primary)' }}>৳{item.price}</span>
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => handleWhatsAppOrder(item)}
+                          className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105"
+                          style={{ 
+                            backgroundColor: 'var(--bg-secondary)',
+                            color: 'var(--text-secondary)'
+                          }}
+                        >
+                          <ExternalLink size={16} />
+                        </button>
+                        <button 
+                          onClick={() => handleAddToCart(item)}
+                          className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105"
+                          style={{ 
+                            background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%)',
+                            color: 'white',
+                            boxShadow: '0 4px 15px rgba(197, 163, 88, 0.3)'
+                          }}
+                        >
+                          <span className="text-lg">+</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-
-        {filteredItems.length === 0 && (
-          <div className="text-center py-12">
-            <Coffee className="mx-auto mb-4" size={48} style={{ color: textSecondary }} />
-            <p style={{ color: textSecondary }}>No teas found matching your search</p>
-          </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         )}
       </div>
 
@@ -216,83 +274,76 @@ const Menu = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-            onClick={() => setShowQuiz(false)}
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
           >
             <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="rounded-2xl p-6 max-w-md w-full"
-              style={{ backgroundColor: bgCard }}
-              onClick={e => e.stopPropagation()}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="luxury-card rounded-3xl p-8 max-w-md w-full"
             >
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold" style={{ color: textPrimary }}>Find Your Perfect Tea</h3>
-                <button onClick={() => setShowQuiz(false)}>
-                  <X size={24} style={{ color: textSecondary }} />
+              <div className="flex justify-between items-center mb-6">
+                <h3 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }} className="text-xl">Find Your Perfect Tea</h3>
+                <button onClick={() => { setShowQuiz(false); setQuizStep(0); setQuizResult(null); }}>
+                  <X size={20} style={{ color: 'var(--text-secondary)' }} />
                 </button>
               </div>
-              {quizStep === 0 && (
+              
+              {!quizResult ? (
                 <div>
-                  <p className="mb-4" style={{ color: textSecondary }}>How are you feeling right now?</p>
-                  <div className="space-y-2">
-                    <button
-                      onClick={() => { setQuizResult('Masala Chai'); setQuizStep(1); }}
-                      className="w-full p-3 rounded-lg text-left transition-colors"
-                      style={{ backgroundColor: bgHover }}
-                    >
-                      <Zap size={18} className="inline mr-2" style={{ color: accentColor }} />
-                      Tired & Sleepy
-                    </button>
-                    <button
-                      onClick={() => { setQuizResult('Green Tea'); setQuizStep(1); }}
-                      className="w-full p-3 rounded-lg text-left transition-colors"
-                      style={{ backgroundColor: bgHover }}
-                    >
-                      <Heart size={18} className="inline mr-2" style={{ color: accentColor }} />
-                      Stressed
-                    </button>
-                    <button
-                      onClick={() => { setQuizResult('Iced Lemon Tea'); setQuizStep(1); }}
-                      className="w-full p-3 rounded-lg text-left transition-colors"
-                      style={{ backgroundColor: bgHover }}
-                    >
-                      <Thermometer size={18} className="inline mr-2" style={{ color: accentColor }} />
-                      Hot & Sweaty
-                    </button>
-                    <button
-                      onClick={() => { setQuizResult('Milk Tea'); setQuizStep(1); }}
-                      className="w-full p-3 rounded-lg text-left transition-colors"
-                      style={{ backgroundColor: bgHover }}
-                    >
-                      <Coffee size={18} className="inline mr-2" style={{ color: accentColor }} />
-                      Just Hungry
-                    </button>
-                  </div>
+                  {quizStep === 0 && (
+                    <div>
+                      <p style={{ color: 'var(--text-secondary)' }} className="mb-4">How do you like your tea?</p>
+                      <div className="space-y-3">
+                        {['Strong & Bold', 'Light & Refreshing', 'Balanced'].map((option, i) => (
+                          <button
+                            key={option}
+                            onClick={() => setQuizStep(1)}
+                            className="w-full p-4 rounded-xl text-left transition-all duration-200"
+                            style={{ 
+                              backgroundColor: 'var(--bg-secondary)',
+                              color: 'var(--text-primary)'
+                            }}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {quizStep === 1 && (
+                    <div>
+                      <p style={{ color: 'var(--text-secondary)' }} className="mb-4">What's your flavor preference?</p>
+                      <div className="space-y-3">
+                        {['Spicy (Masala)', 'Citrus (Lemon)', 'Herbal'].map((option, i) => (
+                          <button
+                            key={option}
+                            onClick={() => setQuizResult('Signature')}
+                            className="w-full p-4 rounded-xl text-left transition-all duration-200"
+                            style={{ 
+                              backgroundColor: 'var(--bg-secondary)',
+                              color: 'var(--text-primary)'
+                            }}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-              {quizStep === 1 && quizResult && (
+              ) : (
                 <div className="text-center">
-                  <Sparkles className="mx-auto mb-4" size={48} style={{ color: accentColor }} />
-                  <h4 className="text-xl font-bold mb-2" style={{ color: textPrimary }}>We recommend:</h4>
-                  <p className="text-2xl font-bold mb-4" style={{ color: accentColor }}>{quizResult}</p>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => { setQuizStep(0); setQuizResult(null); }}
-                      className="flex-1 py-2 rounded-lg"
-                      style={{ backgroundColor: bgHover, color: textPrimary }}
-                    >
-                      Try Again
-                    </button>
-                    <button
-                      onClick={() => setShowQuiz(false)}
-                      className="flex-1 py-2 rounded-lg"
-                      style={{ backgroundColor: accentColor, color: 'white' }}
-                    >
-                      Great!
-                    </button>
-                  </div>
+                  <p style={{ color: 'var(--accent)' }} className="text-lg font-medium mb-2">We recommend:</p>
+                  <h4 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }} className="text-2xl mb-4">
+                    {quizResult === 'Signature' ? 'Masala Chai' : 'Milk Tea'}
+                  </h4>
+                  <button 
+                    onClick={() => handleAddToCart({ id: 1, name: 'Masala Chai', name_bangla: 'মসলা চা', price: 50, category: 'Signature', description: '', image: '/images/tea-1.png', available: 1 })}
+                    className="btn-luxury btn-primary-luxury"
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               )}
             </motion.div>
