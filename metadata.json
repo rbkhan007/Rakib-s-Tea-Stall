@@ -1,0 +1,6 @@
+{
+  "name": "Rakib's Tea Stall",
+  "short_name": "Tea Stall",
+  "description": "Authentic Bangladeshi chai house in Gulshan-2, Dhaka. Serving fresh dudh cha, lemon tea, and more since 2018.",
+  "requestFramePermissions": ["geolocation"]
+}
