@@ -21,7 +21,7 @@
 | 📱 **WhatsApp Ordering** | Direct order via WhatsApp for guests |
 | 🛒 **Shopping Cart** | Persistent cart with localStorage |
 | 💰 **Checkout System** | Works for both logged-in and guest users |
-| 🌙 **Dark/Light Theme** | Proper contrast design with amber accent |
+| 🌙 **Dark/Light Theme** | Proper contrast design with gold accent |
 | 🤖 **AI Chai Bot** | Gemini-powered tea assistant |
 | 📊 **Admin Dashboard** | Secure admin panel with authentication |
 | 🔐 **Customer Accounts** | Optional login for returning customers |
