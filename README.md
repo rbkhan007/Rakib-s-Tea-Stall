@@ -1,5 +1,4 @@
 <div align="center">
-  <img width="1200" height="475" alt="Rakib's Tea Stall Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
   <img width="1200" alt="Homepage Preview" src="https://raw.githubusercontent.com/rbkhan007/Rakib-s-Tea-Stall/main/public/images/Homepage.png" />
 </div>
 
